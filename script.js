@@ -1,10 +1,23 @@
-const gameBoard = (function() {
-    return {
-        sqare1: "", sqare2: "", sqare3: "",
-        sqare4: "", sqare5: "", sqare6: "",
-        sqare7: "", sqare8: "", sqare9: "",
+
+// gamebord object, the fucntion to place the symbol on the specific sqare 
+
+const gameboard = (function() {
+    let gameboardMap = [
+        "", "", "",
+        "", "", "",
+        "", "", "",
+    ];
+    const gameboardMapSymboled = function(sqare, symbol) {
+        gameboardMap[sqare-1] = symbol;      
     };
+    const getGameboardMap = () => {
+        console.log(gameboardMap);   
+    };
+    return { gameboardMapSymboled, getGameboardMap,
+    }; 
 }) (); 
+
+// factory to create players
 
 const player = function(name) {
     const playerName = name;
@@ -15,8 +28,11 @@ const player = function(name) {
     const getPlayerName = () => {
         return playerName;
     };
-    const getPlayerTurn = () => {
+    const getPlayerTurn = () => { 
         return playerTurn;
+    };
+    const incrementTurn = () => {
+        return playerTurn++;
     };
     const getPlayerScore = () => {
         return playerScore;
@@ -24,41 +40,60 @@ const player = function(name) {
     const incrementScore = () => {
         return playerScore++;
     };
+    const givePlayerSymbolX = () => {
+        playerSymbol = "X";
+    };
+    const givePlayerSymbolO = () => {
+        playerSymbol = "O"
+    };
+    const givePlayerSqare = () => {
+        playerSqare = prompt(`${playerName}, please input in the chosen sqare (1 - 9), your symbol ${playerSymbol}.`); 
+    };
+    const getPlayerSqare = () =>  {  
+        return playerSqare;  
+    };
     const getPlayerSymbol = () => {
-        playerSymbol = prompt("X or O").toUpperCase();
-        if (playerChoice === "X" || playerChoice === "O") {
-            return playerSymbol;
-        }
-        else{
-            console.log("Invalid symbol chosen.");
-        }; 
-    }
-    const getPlayerSqare = () =>  {
-        playerSqare = prompt("sqare1 - sqare9, choose the location of your symbol.").toLowerCase();
-        if (playerSqare === "sqare1" || playerSqare === "sqare2" ||
-            playerSqare === "sqare3" || playerSqare === "sqare4" ||
-            playerSqare === "sqare5" || playerSqare === "sqare6" ||
-            playerSqare === "sqare7" || playerSqare === "sqare8" ||
-            playerSqare === "sqare9"
-        ) {
-            return playerSqare;
-        }
-        else {
-            console.log("Invalid sqare placement.");
-        }
-    }
-
+        return playerSymbol;
+    };
     return {
-        getPlayerName, getPlayerTurn, getPlayerScore, incrementScore,
-        getPlayerSymbol, getPlayerSqare
+        getPlayerName, getPlayerTurn, incrementTurn, getPlayerScore, incrementScore,
+        givePlayerSymbolX, givePlayerSymbolO, getPlayerSqare, getPlayerSymbol, 
+        givePlayerSqare,
     };
 };
-const alex = player("alex");
-const george = player("george");
-console.log(alex);
+const player1 = player("Alex");
+const player2 = player("George");
+
+// the logic to play
+
+let randomNumber = Math.floor((Math.random() * 100) +1);     
 
 const gameFlow = function() {
-    if (alex.getPlayerTurn() === 0 && george.getPlayerScore() === 0) {
+    if (player1.getPlayerTurn() === 0 && player2.getPlayerTurn() === 0) {
+        if (randomNumber >= 50) {
+            player1.givePlayerSymbolX();  
+            player2.givePlayerSymbolO();  
+            player1.incrementTurn();  
+            
+                player1.givePlayerSqare();  
+                player2.givePlayerSqare();
+                gameboard.gameboardMapSymboled(player1.getPlayerSqare(), player1.getPlayerSymbol()); 
+                gameboard.gameboardMapSymboled(player2.getPlayerSqare(), player2.getPlayerSymbol());
+        }   
+        /*else if (randomNumber < 50) { 
+            player2.givePlayerSymbolX();   
+            player2.givePlayerSqare();
+            player2.incrementTurn();
 
-    }
-};      
+            player1.givePlayerSymbolO();  
+            player1.givePlayerSqare(); 
+
+            gameboard.gameboardMapSymboled(player2.getPlayerSqare(), player2.getPlayerSymbol()); 
+            gameboard.gameboardMapSymboled(player1.getPlayerSqare(), player1.getPlayerSymbol());
+        }*/
+        else { 
+            console.log("something is wrong.");    
+        }   
+        console.log(gameboard.getGameboardMap());               
+    }              
+};               
