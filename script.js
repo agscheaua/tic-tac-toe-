@@ -22,7 +22,7 @@ const gameboard = function() {
             player2.givePlayerSymbolX();
         }
         else {
-            console.log("givePlayersSymbols, problems.") 
+            console.log("givePlayersSymbols, problems.")
         };
     }; 
     const writeInGameboardMapLogic = function() {
@@ -55,53 +55,88 @@ const gameboard = function() {
                 console.log("equal"); 
             } 
             else { 
-                console.log("problem writeInGameboardMapLogic");  
+                console.log("writeInGameboardMapLogic, problem.");  
+            };
+
+            if (
+                (gameboardMap[0] === "X" && gameboardMap[1] === "X" && gameboardMap[2] === "X") ||
+                (gameboardMap[3] === "X" && gameboardMap[4] === "X" && gameboardMap[5] === "X") ||
+                (gameboardMap[6] === "X" && gameboardMap[7] === "X" && gameboardMap[8] === "X") ||
+                (gameboardMap[0] === "X" && gameboardMap[3] === "X" && gameboardMap[6] === "X") ||
+                (gameboardMap[1] === "X" && gameboardMap[4] === "X" && gameboardMap[7] === "X") ||
+                (gameboardMap[2] === "X" && gameboardMap[5] === "X" && gameboardMap[8] === "X") ||
+                (gameboardMap[0] === "X" && gameboardMap[4] === "X" && gameboardMap[8] === "X") ||
+                (gameboardMap[6] === "X" && gameboardMap[4] === "X" && gameboardMap[2] === "X")
+            ) {
+                if (player1.getPlayerSymbol() === "X") {
+                    player1.incrementPlayerGamesWon();
+                   alert(player1.getPlayerName() + " has won the game!");
+                    player1.incrementGamesPlayed();
+                    player2.incrementGamesPlayed();
+                    cleanGameBoardMap();
+                    firstGame.givePlayersSymbols();
+                    firstGame.writeInGameboardMapLogic();  
+                }
+                else if (player2.getPlayerSymbol() === "X") {
+                    player2.incrementPlayerGamesWon();
+                    alert(player2.getPlayerName() + " has won the game!"); 
+                    player1.incrementGamesPlayed();
+                    player2.incrementGamesPlayed();
+                    cleanGameBoardMap();
+                    firstGame.givePlayersSymbols();
+                    firstGame.writeInGameboardMapLogic();  
+                }
+                else{};
+            }
+            else if (
+                (gameboardMap[0] === "O" && gameboardMap[1] === "O" && gameboardMap[2] === "O") ||
+                (gameboardMap[3] === "O" && gameboardMap[4] === "O" && gameboardMap[5] === "O") ||
+                (gameboardMap[3] === "O" && gameboardMap[4] === "O" && gameboardMap[5] === "O") ||
+                (gameboardMap[0] === "O" && gameboardMap[3] === "O" && gameboardMap[6] === "O") ||
+                (gameboardMap[1] === "O" && gameboardMap[4] === "O" && gameboardMap[7] === "O") ||
+                (gameboardMap[2] === "O" && gameboardMap[5] === "O" && gameboardMap[8] === "O") ||
+                (gameboardMap[0] === "O" && gameboardMap[4] === "O" && gameboardMap[8] === "O") ||
+                (gameboardMap[6] === "O" && gameboardMap[4] === "O" && gameboardMap[2] === "O")
+            ) {
+                if (player1.getPlayerSymbol() === "O") {
+                    player1.incrementPlayerGamesWon();
+                    alert(player1.getPlayerName() + " has won the game!");
+                    player1.incrementGamesPlayed();
+                    player2.incrementGamesPlayed();
+                    cleanGameBoardMap();
+                    firstGame.givePlayersSymbols();
+                    firstGame.writeInGameboardMapLogic();  
+                }          
+                else if (player2.getPlayerSymbol() === "O") {
+                    player2.incrementPlayerGamesWon();
+                    alert(player2.getPlayerName() + " has won the game!");
+                    player1.incrementGamesPlayed();
+                    player2.incrementGamesPlayed();
+                    cleanGameBoardMap();
+                    firstGame.givePlayersSymbols();
+                    firstGame.writeInGameboardMapLogic();   
+                }
+                else{};
+            }
+            else { 
+                return "Draw, no one won the game!";   
             };
         } );  
         player1.incrementGamesPlayed();
         player2.incrementGamesPlayed();
-        return getGameboardMap();
+        cleanGameBoardMap();
     };
-    const getGameWinner = function() {
-        if (gameboardMap[0] !== "") {
-        if (gameboardMap[0] === gameboardMap[1] && gameboardMap[1] === gameboardMap[2]) {
-            console.log(gameboardMap[1] + " wins!");
-        }
-        else if (gameboardMap[3] === gameboardMap[4] && gameboardMap[4] === gameboardMap[5]) {
-            console.log(gameboardMap[4] + " wins!");
-        }
-        else if (gameboardMap[6] === gameboardMap[7] && gameboardMap[7] === gameboardMap[8]) {
-            console.log(gameboardMap[7] + " wins!");
-        }
-        else if (gameboardMap[0] === gameboardMap[3] && gameboardMap[3] === gameboardMap[6]) {
-            console.log(gameboardMap[1] + " wins!");
-        }
-        else if (gameboardMap[1] === gameboardMap[4] && gameboardMap[4] === gameboardMap[7]) {
-            console.log(gameboardMap[2] + " wins!");
-        }
-        else if (gameboardMap[2] === gameboardMap[5] && gameboardMap[5] === gameboardMap[8]) {
-            console.log(gameboardMap[3] + " wins!");
-        }
-        else if (gameboardMap[0] === gameboardMap[4] && gameboardMap[4] === gameboardMap[8]) {
-            console.log(gameboardMap[1] + " wins!");
-        }
-        else if (gameboardMap[6] === gameboardMap[4] && gameboardMap[4] === gameboardMap[2]) {
-            console.log(gameboardMap[7] + " wins!");  
-        }
-        else {
-        return console.log("pending"); 
-        };
-        }
-        else{
-            return console.log("pending");
-        } 
-    };
+    const cleanGameBoardMap = () => {
+        for (let i = 0; i <= 8; i++ ) {
+            gameboardMap[i] = "";
+        }; 
+    }
     const getGameboardMap = () => {
         return console.log(gameboardMap);   
     };
     return { 
         writeInGameboardMap, getGameboardMap, givePlayersSymbols, writeInGameboardMapLogic,
-        getGameWinner,
+        cleanGameBoardMap,
     }; 
 };  
 
@@ -158,27 +193,15 @@ const player = function(name) {
     };
 };
 const player1 = player("Alex");
-const player2 = player("George");
+const player2 = player("George"); 
 
- const gameFlow = function() {
-    if (player1.getPlayerTurn() === 0 && player2.getPlayerTurn() === 0) {
-        if (randomNumber > 50) {
+const gameFlow = function() {
+};
 
-        }
-        else if (randomNumber <= 50) {
- 
-        }
-        else {
-            console.log("0-100 problem"); 
-        }
-    }
-    else {
-        console.log("else player turn");
-    }
- };
-
-const firstGame = gameboard(); 
-//firstGame.givePlayersSymbols();
-//firstGame.writeInGameboardMapLogic();  
+const firstGame = gameboard();    
+firstGame.givePlayersSymbols();
+firstGame.writeInGameboardMapLogic();    
+/*firstGame.givePlayersSymbols();
+firstGame.writeInGameboardMapLogic();  */
 console.log(player1.getPlayerTurn(), player2.getPlayerTurn(), player1.getGamesPlayed());  
-         
+console.log(player1.getPlayerGamesWon(), player2.getPlayerGamesWon());   
