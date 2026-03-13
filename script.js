@@ -1,5 +1,6 @@
 
-// the gameboard
+// the factory function to create the gameboard and all methods for placement and logic of the game,
+// it can be transformed in a module IIFEs;
   
 const gameboard = function() {
     const gameboardMap = [  
@@ -21,17 +22,26 @@ const gameboard = function() {
         }
         else {};
     }; 
+    let loopBreaker = 0;
     const writeInGameboardMapLogic = function() {   
-        gameboardMap.forEach( (item) => { 
-            if (player1.getPlayerGamesWon() === 3) {
+        for (let i = 0; i <= 8; i++) { 
+            if (loopBreaker > 0) {
+                break;
+            }
+            else if (player1.getPlayerGamesWon() === 3 && loopBreaker === 0) {
+                alert(`${player1.getPlayerName()} has won the game!`);
                 console.log(`${player1.getPlayerName()} has won the game!`);
-                return;
+                loopBreaker += 1;
+                break;
             }
-            else if (player2.getPlayerGamesWon() === 3) {
+            else if (player2.getPlayerGamesWon() === 3 && loopBreaker === 0) { 
+                alert(`${player2.getPlayerName()} has won the game!`); 
                 console.log(`${player2.getPlayerName()} has won the game!`);
-                return;
+                loopBreaker += 1; 
+                break; 
             }
-            else{}; 
+            else{
+            };  
 
             if (player1.getPlayerTurn() > player2.getPlayerTurn()) {
                 player2.askPlayerSqare();
@@ -67,8 +77,9 @@ const gameboard = function() {
                     player2.incrementTurn();
                 }
                 else {};
-            } 
+            }  
             else {};
+
             if (
                 (gameboardMap[0] === "X" && gameboardMap[1] === "X" && gameboardMap[2] === "X") ||
                 (gameboardMap[3] === "X" && gameboardMap[4] === "X" && gameboardMap[5] === "X") ||
@@ -84,9 +95,12 @@ const gameboard = function() {
                     player2.resetPlayerGamesWon();
                     player1.resetTurn();
                     player2.resetTurn(); 
-                    alert(player1.getPlayerName() + " has won the game!");
                     player1.incrementGamesPlayed();
                     player2.incrementGamesPlayed();
+                    alert(player1.getPlayerName() + " has won the round number " + player1.getGamesPlayed());
+                    console.log(player1.getPlayerName() + " has won the round number " + player1.getGamesPlayed());
+                    console.log(`${player1.getPlayerName()} score: ` + player1.getPlayerGamesWon(),
+                    `${player2.getPlayerName()} score: ` + player2.getPlayerGamesWon());  
                     cleanGameBoardMap();
                     battlefield.givePlayersSymbols();
                     battlefield.writeInGameboardMapLogic();
@@ -96,10 +110,13 @@ const gameboard = function() {
                     player1.resetPlayerGamesWon();
                     player1.resetTurn();
                     player2.resetTurn(); 
-                    alert(player2.getPlayerName() + " has won the game!"); 
                     player1.incrementGamesPlayed();
                     player2.incrementGamesPlayed();
-                    cleanGameBoardMap();
+                    alert(player2.getPlayerName() + " has won the round number " + player2.getGamesPlayed()); 
+                    console.log(player2.getPlayerName() + " has won the round number " + player2.getGamesPlayed()); 
+                    console.log(`${player1.getPlayerName()} score: ` + player1.getPlayerGamesWon(),
+                    `${player2.getPlayerName()} score: ` + player2.getPlayerGamesWon());  
+                    cleanGameBoardMap(); 
                     battlefield.givePlayersSymbols();
                     battlefield.writeInGameboardMapLogic(); 
                 }
@@ -120,10 +137,13 @@ const gameboard = function() {
                     player2.resetPlayerGamesWon();
                     player1.resetTurn();
                     player2.resetTurn(); 
-                    alert(player1.getPlayerName() + " has won the game!");
                     player1.incrementGamesPlayed();
                     player2.incrementGamesPlayed();
-                    cleanGameBoardMap();
+                    alert(player1.getPlayerName() + " has won the round number " + player1.getGamesPlayed());
+                    console.log(player1.getPlayerName() + " has won the round number " + player1.getGamesPlayed()); 
+                    console.log(`${player1.getPlayerName()} score: ` + player1.getPlayerGamesWon(),
+                    `${player2.getPlayerName()} score: ` + player2.getPlayerGamesWon());  
+                    cleanGameBoardMap(); 
                     battlefield.givePlayersSymbols();
                     battlefield.writeInGameboardMapLogic();
                 }          
@@ -132,30 +152,34 @@ const gameboard = function() {
                     player1.resetPlayerGamesWon(); 
                     player1.resetTurn();
                     player2.resetTurn(); 
-                    alert(player2.getPlayerName() + " has won the game!");
                     player1.incrementGamesPlayed();
                     player2.incrementGamesPlayed();
+                    alert(player2.getPlayerName() + " has won the round number " + player2.getGamesPlayed()); 
+                    console.log(player2.getPlayerName() + " has won the round number " + player2.getGamesPlayed()); 
+                    console.log(`${player1.getPlayerName()} score: ` + player1.getPlayerGamesWon(),
+                    `${player2.getPlayerName()} score: ` + player2.getPlayerGamesWon());  
                     cleanGameBoardMap();
                     battlefield.givePlayersSymbols();
                     battlefield.writeInGameboardMapLogic();
                 }
                 else{};
             }
-            else if (gameboard[0] && gameboard[1] && gameboard[2] && gameboard[3] && gameboard[4] &&
-            gameboard[5] && gameboard[6] && gameboard[7] && gameboard[8] && gameboard[9]) { 
+            else if (gameboardMap[0] !== "" && gameboardMap[1] !== "" && gameboardMap[2] !== "" && gameboardMap[3] !== "" &&
+                gameboardMap[4] !== "" && gameboardMap[5] !== "" && gameboardMap[6] !== "" && gameboardMap[7] !== "" && gameboardMap[8] !== "") {  
                     player1.resetTurn();
-                    player2.resetTurn();  
+                    player2.resetTurn();    
                     player1.incrementGamesPlayed();
-                    player2.incrementGamesPlayed();
+                    player2.incrementGamesPlayed();  
+                    alert("Draw, no one won this round!"); 
+                    console.log("Draw, no one won this round!");   
+                    console.log(`${player1.getPlayerName()} score: ` + player1.getPlayerGamesWon(),
+                    `${player2.getPlayerName()} score: ` + player2.getPlayerGamesWon()); 
                     cleanGameBoardMap();
                     battlefield.givePlayersSymbols();
                     battlefield.writeInGameboardMapLogic();
-                    console.log("Draw, no one won the game!"); 
                 }
             else {}; 
-
-            console.log(player1.getPlayerGamesWon(), player2.getPlayerGamesWon());
-        } );  
+        };  
     };
     const cleanGameBoardMap = () => {
         for (let i = 0; i <= 8; i++ ) {
@@ -171,7 +195,7 @@ const gameboard = function() {
     }; 
 };  
 
-// factory to create players
+// the factory function to create the players, (the game was made with only 2 players in mind);
 
 const player = function(name) {
     const playerName = name;
@@ -213,14 +237,14 @@ const player = function(name) {
     const givePlayerSymbolO = () => {
         return playerSymbol = "O"
     };
+    const getPlayerSymbol = () => {
+        return playerSymbol;
+    };
     const askPlayerSqare = () => {
         return playerSqare = prompt(`${playerName}, please input in the chosen sqare (1 - 9), your symbol ${playerSymbol}.`); 
     };
     const getPlayerSqare = () =>  {  
         return playerSqare;  
-    };
-    const getPlayerSymbol = () => {
-        return playerSymbol;
     };
     return {
         getPlayerName, getPlayerTurn, incrementTurn, getGamesPlayed, incrementGamesPlayed, 
@@ -228,27 +252,48 @@ const player = function(name) {
         getPlayerGamesWon, incrementPlayerGamesWon, resetPlayerGamesWon, resetTurn,
     };
 };
+
+// the 2 players, instances of the player factory function, and the battlefield,
+// a instance of gameboard factory function;
+
 const player1 = player("Alex");
 const player2 = player("George"); 
 const battlefield = gameboard(); 
 
+// the module made with a IIFEs, to control the flow of the game; 
+
 const gameFlow = (function() {
-    
-    const stopFunction = () => {
-    if (player1.getPlayerGamesWon() === 1 || player2. getPlayerGamesWon() === 1) {
-        throw console.error("stop");
-    }
-    else{};
-    }
     const playRound = () => {
         battlefield.givePlayersSymbols();
         battlefield.writeInGameboardMapLogic();
-        console.log(player1.getPlayerTurn(), player2.getPlayerTurn(), player1.getGamesPlayed());  
-        console.log(player1.getPlayerGamesWon(), player2.getPlayerGamesWon()); 
     };
     return {
-        playRound, stopFunction
+        playRound,
     };
-}) ();     
-gameFlow.playRound(); 
-gameFlow.stopFunction(); 
+}) ();      
+//gameFlow.playRound();   
+
+const displayGame = (function() {
+    const elementsCreator = function() {
+        const sqaresContainerElement = document.createElement("div");
+        sqaresContainerElement.classList.add("sqaresContainer");
+        document.body.appendChild(sqaresContainerElement);
+
+        for (let i = 0; i <= 8; i++) {
+            const sqareSymbol = document.createElement("div");
+            sqareSymbol.classList.add(`sqare${i+1}`, `sqare`); 
+            sqaresContainerElement.appendChild(sqareSymbol); 
+        };
+
+        const allSqareSymbol = Array.from(document.querySelectorAll(".sqare"));
+        for (let i = 0; i <= 8; i++) {
+            allSqareSymbol[i].textContent = 1;
+        };
+    };
+ 
+    return{
+        elementsCreator,
+    };
+}) (); 
+displayGame.elementsCreator();
+
