@@ -19,12 +19,20 @@ const gameboard = function() {
             player1.givePlayerSymbolO();
             player2.givePlayerSymbolX();
         }
-        else {
-            console.log("givePlayersSymbols, problem.")
-        };
+        else {};
     }; 
     const writeInGameboardMapLogic = function() {   
         gameboardMap.forEach( (item) => { 
+            if (player1.getPlayerGamesWon() === 3) {
+                console.log(`${player1.getPlayerName()} has won the game!`);
+                return;
+            }
+            else if (player2.getPlayerGamesWon() === 3) {
+                console.log(`${player2.getPlayerName()} has won the game!`);
+                return;
+            }
+            else{}; 
+
             if (player1.getPlayerTurn() > player2.getPlayerTurn()) {
                 player2.askPlayerSqare();
                 for (;gameboardMap[player2.getPlayerSqare() - 1] !== "";) {
@@ -32,7 +40,6 @@ const gameboard = function() {
                 };
                 writeInGameboardMap(player2.getPlayerSqare(), player2.getPlayerSymbol());
                 player2.incrementTurn();
-                console.log("player1 bigger.") 
             }
             else if(player1.getPlayerTurn() < player2.getPlayerTurn()) {
                 player1.askPlayerSqare();
@@ -41,7 +48,6 @@ const gameboard = function() {
                 };
                 writeInGameboardMap(player1.getPlayerSqare(), player1.getPlayerSymbol());
                 player1.incrementTurn();
-                console.log("player2 bigger.");  
             }
             else if (player1.getPlayerTurn() === player2.getPlayerTurn()) {
                 if (player1.getPlayerSymbol() === "X") {
@@ -51,7 +57,6 @@ const gameboard = function() {
                     };
                     writeInGameboardMap(player1.getPlayerSqare(), player1.getPlayerSymbol());
                     player1.incrementTurn();
-                    console.log("equal"); 
                 }
                 else if (player2.getPlayerSymbol() === "X") {
                     player2.askPlayerSqare();
@@ -60,7 +65,6 @@ const gameboard = function() {
                     };
                     writeInGameboardMap(player2.getPlayerSqare(), player2.getPlayerSymbol());
                     player2.incrementTurn();
-                    console.log("equal") 
                 }
                 else {};
             } 
@@ -138,24 +142,19 @@ const gameboard = function() {
                 else{};
             }
             else if (gameboard[0] && gameboard[1] && gameboard[2] && gameboard[3] && gameboard[4] &&
-            gameboard[5] && gameboard[6] && gameboard[7] && gameboard[8] && gameboard[9]) {
-                    console.log("Draw, no one won the game!");  
+            gameboard[5] && gameboard[6] && gameboard[7] && gameboard[8] && gameboard[9]) { 
                     player1.resetTurn();
                     player2.resetTurn();  
+                    player1.incrementGamesPlayed();
+                    player2.incrementGamesPlayed();
+                    cleanGameBoardMap();
+                    battlefield.givePlayersSymbols();
+                    battlefield.writeInGameboardMapLogic();
+                    console.log("Draw, no one won the game!"); 
                 }
-            else { 
-                console.log("round winner, problem.");    
-            };
+            else {}; 
 
             console.log(player1.getPlayerGamesWon(), player2.getPlayerGamesWon());
-
-            if (player1.getPlayerGamesWon() === 3) {
-                console.log(`${player1.getPlayerName()} has won the game!`);
-            }
-            else if (player2.getPlayerGamesWon() === 3) {
-                console.log(`${player2.getPlayerName()} has won the game!`);
-            }
-            else{"3 game in a row problem."};
         } );  
     };
     const cleanGameBoardMap = () => {
@@ -251,5 +250,5 @@ const gameFlow = (function() {
         playRound, stopFunction
     };
 }) ();     
-/*gameFlow.playRound(); 
+gameFlow.playRound(); 
 gameFlow.stopFunction(); 
