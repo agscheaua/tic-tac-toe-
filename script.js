@@ -12,7 +12,7 @@ const gameboard = (function() {
     const writeInGameboardMap = (sqare, symbol) => {
         gameboardMap[sqare-1] = symbol;      
     }; 
-
+/*
     const givePlayersSymbols = () => {
         if (player1.getGamesPlayed() % 2 === 0) {   
             player1.givePlayerSymbolX();
@@ -183,7 +183,7 @@ const gameboard = (function() {
             else {}; 
         };  
     };
-
+    */
     const cleanGameBoardMap = () => {
         for (let i = 0; i <= 8; i++ ) {
             gameboardMap[i] = "";
@@ -200,9 +200,9 @@ const gameboard = (function() {
     };
 
     return { 
-        writeInGameboardMap, getGameboardMap, givePlayersSymbols, writeInGameboardMapLogic,
+        writeInGameboardMap, getGameboardMap, /*givePlayersSymbols, writeInGameboardMapLogic,*/
         cleanGameBoardMap, getCopyGameboardMap, 
-    }; 
+    };  
 }) ();  
 
 // the factory function to create the players, (the game was made with only 2 players in mind);
@@ -250,6 +250,10 @@ const player = function(name) {
         return gamesPlayed++;
     };
 
+    const resetGamesPlayed = () => {
+        return gamesPlayed = 0;
+    }
+
     const givePlayerSymbolX = () => {
         return playerSymbol = "X";
     };
@@ -278,7 +282,7 @@ const player = function(name) {
         getPlayerName, getPlayerTurn, incrementTurn, getGamesPlayed, incrementGamesPlayed, 
         givePlayerSymbolX, givePlayerSymbolO, askPlayerSqare, getPlayerSqare, getPlayerSymbol,
         getPlayerGamesWon, incrementPlayerGamesWon, resetPlayerGamesWon, resetTurn,
-        givePlayerSqare,
+        givePlayerSqare, resetGamesPlayed,
     };
 };
 
@@ -303,45 +307,73 @@ const gameFlow = (function() {
 // displayGame module, made with an IIFE, made to control the display??;
 
 const displayGame = (function() {
+    // the game sqares container;
     const sqaresContainerElement = document.createElement("div");
     sqaresContainerElement.classList.add("sqaresContainer");
     document.body.appendChild(sqaresContainerElement);
 
+    // create all 9 sqares;
     for (let i = 0; i <= 8; i++) {
         const sqareSymbol = document.createElement("div");
         sqareSymbol.classList.add(`sqare${i+1}`, "sqare"); 
         sqaresContainerElement.appendChild(sqareSymbol); 
     }; 
-
+ 
+    // variable that holds all sqares;
     const allSqareToSymbol = Array.from(document.querySelectorAll(".sqare"));
-    for (let i = 0; i <= 8; i++) {
-        allSqareToSymbol[i].textContent = gameboard.getCopyGameboardMap()[i];
-    }; 
 
+    // function to clean all the text inside the sqares;
     const cleanDispaySymbols = () => {
         for (let i = 0; i <= 8; i++) {
             allSqareToSymbol[i].textContent = "";
         };
     };
-  
-    const elementsCreator = function() {
-        sqaresContainerElement.addEventListener("mousedown", (elem) => {
 
-            if (player1.getGamesPlayed() % 2 === 0) {   
-                player1.givePlayerSymbolX();
-                player2.givePlayerSymbolO(); 
+    // function to give each player a symbol based on the rounds played;
+    const givePlayersSymbolsDisplay = function() {
+        if (player1.getGamesPlayed() % 2 === 0) {   
+            player1.givePlayerSymbolX();
+            player2.givePlayerSymbolO(); 
+        }   
+        else if (player1.getGamesPlayed() % 2 !== 0) { 
+            player1.givePlayerSymbolO();
+            player2.givePlayerSymbolX();
+        }
+        else {};  
+    };
+    
+    // function to anounce the first player and its symbol  
+    const getFirstPlayer = function() {
+        givePlayersSymbolsDisplay();
+        
+        let gameFinish = false; 
+        if (player1.getPlayerTurn() === player2.getPlayerTurn() && (player1.getPlayerTurn() === 0 && player2.getPlayerTurn() === 0) && gameFinish === false) {
+            if (player1.getPlayerSymbol() === "X") { 
+                console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
             }
-            else if (player1.getGamesPlayed() % 2 !== 0) { 
-                player1.givePlayerSymbolO();
-                player2.givePlayerSymbolX();
-            }
-            else {};  
-
-            let sqareClicked = elem.target.classList[0].slice(-1); 
-            
-            if (player1.getPlayerTurn() > player2.getPlayerTurn()) {
-                player2.givePlayerSqare(sqareClicked); 
+            else if (player2.getPlayerSymbol() === "X") {
                 console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`);
+            } 
+            else {};    
+        }
+        else{}; 
+    }; 
+
+    // variable that helps with the last anouncement of the current player and its symbol
+    // it will stop the listing of the next player info when someone wins the round
+    let roundFinish;
+
+    // game main logic function
+    const displayGameLogic = function() {  
+        sqaresContainerElement.addEventListener("mousedown", (elem) => {
+           givePlayersSymbolsDisplay();
+            
+           // get the number of the sqare element from its html class
+            let sqareClicked = elem.target.classList[0].slice(-1); 
+
+            // logic to switch between each player when its time to input a symbol
+            if (player1.getPlayerTurn() > player2.getPlayerTurn()) { 
+                player2.givePlayerSqare(sqareClicked); 
                 if (gameboard.getCopyGameboardMap()[player2.getPlayerSqare() - 1] === "" ) {
                     gameboard.writeInGameboardMap(player2.getPlayerSqare(), player2.getPlayerSymbol());
                     elem.target.textContent = (gameboard.getCopyGameboardMap()[sqareClicked - 1]); 
@@ -351,18 +383,16 @@ const displayGame = (function() {
             }
             else if(player1.getPlayerTurn() < player2.getPlayerTurn()) {
                 player1.givePlayerSqare(sqareClicked);
-                console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
                 if (gameboard.getCopyGameboardMap()[player1.getPlayerSqare() - 1] === "") {
                     gameboard.writeInGameboardMap(player1.getPlayerSqare(), player1.getPlayerSymbol());
                     elem.target.textContent = (gameboard.getCopyGameboardMap()[sqareClicked - 1]); 
                     player1.incrementTurn();
                 }
-                else {player1.givePlayerSqare(sqareClicked)};
+                else {player1.givePlayerSqare(sqareClicked)};      
             }
             else if (player1.getPlayerTurn() === player2.getPlayerTurn()) {
                 if (player1.getPlayerSymbol() === "X") {
                     player1.givePlayerSqare(sqareClicked);
-                    console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
                     if (gameboard.getCopyGameboardMap()[player1.getPlayerSqare() - 1] === "") {
                         gameboard.writeInGameboardMap(player1.getPlayerSqare(), player1.getPlayerSymbol());
                         elem.target.textContent = (gameboard.getCopyGameboardMap()[sqareClicked - 1]); 
@@ -372,7 +402,6 @@ const displayGame = (function() {
                 }
                 else if (player2.getPlayerSymbol() === "X") {
                     player2.givePlayerSqare(sqareClicked); 
-                    console.log(`${player2.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`)
                     if (gameboard.getCopyGameboardMap()[player2.getPlayerSqare() - 1] === "" ) {
                         gameboard.writeInGameboardMap(player2.getPlayerSqare(), player2.getPlayerSymbol());
                         elem.target.textContent = (gameboard.getCopyGameboardMap()[sqareClicked - 1]); 
@@ -382,8 +411,10 @@ const displayGame = (function() {
                 }
                 else {};
             }   
-            else {};  
+            else {};   
 
+            // logic that gets the wining player, clean sqares after each round, clean gameboard array,
+            //
             if (
                 (gameboard.getCopyGameboardMap()[0] === "X" && gameboard.getCopyGameboardMap()[1] === "X" && gameboard.getCopyGameboardMap()[2] === "X") ||
                 (gameboard.getCopyGameboardMap()[3] === "X" && gameboard.getCopyGameboardMap()[4] === "X" && gameboard.getCopyGameboardMap()[5] === "X") ||
@@ -401,11 +432,12 @@ const displayGame = (function() {
                     player2.resetTurn(); 
                     player1.incrementGamesPlayed();
                     player2.incrementGamesPlayed();
+                    roundFinish = true;
                     console.log(player1.getPlayerName() + " has won the round number " + player1.getGamesPlayed());
                     console.log(`${player1.getPlayerName()} score: ` + player1.getPlayerGamesWon(),
                     `${player2.getPlayerName()} score: ` + player2.getPlayerGamesWon());  
                     gameboard.cleanGameBoardMap();
-                    cleanDispaySymbols();    
+                    cleanDispaySymbols();   
                 }
                 else if (player2.getPlayerSymbol() === "X") {
                     player2.incrementPlayerGamesWon();
@@ -414,6 +446,7 @@ const displayGame = (function() {
                     player2.resetTurn(); 
                     player1.incrementGamesPlayed();
                     player2.incrementGamesPlayed();
+                    roundFinish = true;
                     console.log(player2.getPlayerName() + " has won the round number " + player2.getGamesPlayed()); 
                     console.log(`${player1.getPlayerName()} score: ` + player1.getPlayerGamesWon(),
                     `${player2.getPlayerName()} score: ` + player2.getPlayerGamesWon());  
@@ -439,6 +472,7 @@ const displayGame = (function() {
                     player2.resetTurn(); 
                     player1.incrementGamesPlayed();
                     player2.incrementGamesPlayed();
+                    roundFinish = true;
                     console.log(player1.getPlayerName() + " has won the round number " + player1.getGamesPlayed()); 
                     console.log(`${player1.getPlayerName()} score: ` + player1.getPlayerGamesWon(),
                     `${player2.getPlayerName()} score: ` + player2.getPlayerGamesWon());  
@@ -452,6 +486,7 @@ const displayGame = (function() {
                     player2.resetTurn(); 
                     player1.incrementGamesPlayed(); 
                     player2.incrementGamesPlayed();
+                    roundFinish = true;
                     console.log(player2.getPlayerName() + " has won the round number " + player2.getGamesPlayed()); 
                     console.log(`${player1.getPlayerName()} score: ` + player1.getPlayerGamesWon(),
                     `${player2.getPlayerName()} score: ` + player2.getPlayerGamesWon());  
@@ -466,20 +501,78 @@ const displayGame = (function() {
                     player2.resetTurn();    
                     player1.incrementGamesPlayed();
                     player2.incrementGamesPlayed();  
+                    roundFinish = true;
                     console.log("Draw, no one won this round!");   
                     console.log(`${player1.getPlayerName()} score: ` + player1.getPlayerGamesWon(),
                     `${player2.getPlayerName()} score: ` + player2.getPlayerGamesWon()); 
                     gameboard.cleanGameBoardMap();
-                    gameboard.givePlayersSymbols();
-                    cleanDispaySymbols() 
+                    cleanDispaySymbols(); 
                 }
-            else {}; 
-            console.log(gameboard.getCopyGameboardMap());   
-        } ); 
+            else {
+                console.log("Pending.");
+            }; 
+
+            // announce the current player and its symbol
+            if (roundFinish !== true) { 
+                if (player1.getPlayerTurn() > player2.getPlayerTurn()) {
+                    console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`);
+                }
+                else if (player1.getPlayerTurn() < player2.getPlayerTurn()) {
+                    console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
+                }
+                else if (player1.getPlayerTurn() === player2.getPlayerTurn()) {
+                    if (player1.getPlayerSymbol() === "X") {
+                        console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
+                    }
+                    else if (player2.getPlayerSymbol() === "X") {
+                        console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`);
+                    }
+                    else {};  
+                }
+                else {};    
+            }
+            else {
+                console.log("Round end."); 
+                roundFinish = false;
+                getFirstPlayer();
+            }; 
+
+            // when one player reach 3 consecutive wins the games anounce the winner and 
+            // restart all information
+            if (player1.getPlayerGamesWon() === 3) {
+                alert(`${player1.getPlayerName()} has won the game!`);
+                console.log(`${player1.getPlayerName()} has won the game!`);
+                gameFinish = true;
+                player1.resetTurn();
+                player2.resetTurn();
+                player1.resetGamesPlayed();
+                player2.resetGamesPlayed();
+                player1.resetPlayerGamesWon();
+                player2.resetPlayerGamesWon(); 
+                getFirstPlayer();
+            }
+            else if (player2.getPlayerGamesWon() === 3) { 
+                alert(`${player2.getPlayerName()} has won the game!`); 
+                console.log(`${player2.getPlayerName()} has won the game!`);
+                gameFinish = true;
+                player1.resetTurn();
+                player2.resetTurn();
+                player1.resetGamesPlayed();
+                player2.resetGamesPlayed();
+                player1.resetPlayerGamesWon();
+                player2.resetPlayerGamesWon(); 
+                getFirstPlayer();
+            } 
+            else{};  
+
+            console.log(gameboard.getCopyGameboardMap());  
+        });  
     }; 
+
     return{
-        elementsCreator, cleanDispaySymbols,
-    };  
+        displayGameLogic, getFirstPlayer,
+    };   
 }) ();   
-displayGame.elementsCreator(); 
+displayGame.getFirstPlayer(); 
+displayGame.displayGameLogic();    
  
