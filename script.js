@@ -119,8 +119,8 @@ const player = function(name) {
 };
 
 //
-const player1 = player("Alex");
-const player2 = player("George");   
+const player1 = player("Player-1");
+const player2 = player("Player-2");   
 
 // 
 const displayGame = (function() { 
@@ -131,8 +131,9 @@ const displayGame = (function() {
     const secondPlayer = document.querySelector(".secondPlayer");
     const roundNumber = document.querySelector(".roundNumber");
     const roundInfo = document.querySelector(".roundInfo");
-    const startChangeNames = document.querySelector(".startChangeNames");
+    const startGameButton = document.querySelector(".startGameButton");
     const resetGame = document.querySelector(".resetGame");
+    const changeNameButton = document.querySelector(".changeNameButton")
 
     const boardgameDisplay = document.querySelector(".boardgameDisplay");
     const sqaresContainerElement = document.createElement("div");
@@ -155,6 +156,16 @@ const displayGame = (function() {
         };
     }; 
 
+    //
+    const changeName = function() {
+        changeNameButton.addEventListener("click", () => {
+            player1.changePlayerName(prompt("Enter a new name for Player-1: "));
+            player2.changePlayerName(prompt("Enter a new name for Player-2: "));
+            displayGame.getFirstPlayer();  
+            displayGame.displayGameLogic();
+        });
+    };
+    
     // 
     const givePlayersSymbolsDisplay = function() {
         if (player1.getGamesPlayed() % 2 === 0) {   
@@ -175,27 +186,30 @@ const displayGame = (function() {
         if (player1.getPlayerTurn() === player2.getPlayerTurn() && (player1.getPlayerTurn() === 0 && player2.getPlayerTurn() === 0)) {
             if (player1.getPlayerSymbol() === "X") { 
                 console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
+                roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`;
             }
             else if (player2.getPlayerSymbol() === "X") {
                 console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`);
+                roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`;
             } 
             else {};    
-        }
+        } 
         else{}; 
     }; 
 
     //
-    const gameScore = function() { 
+    const gameInfo = function() { 
         firstPlayer.textContent = `${player1.getPlayerName()} score: ${player1.getPlayerGamesWon()}`;
+        secondPlayer.textContent = `${player2.getPlayerName()} score: ${player2.getPlayerGamesWon()}`;
+        roundNumber.textContent = `Round number: ${player1.getGamesPlayed()}`;
     };
-
 
     let roundFinish;
     const displayGameLogic = function() {  
-        gameScore(); 
+        gameInfo(); 
         sqaresContainerElement.addEventListener("mousedown", (elem) => {
-           givePlayersSymbolsDisplay();
-            gameScore();
+            givePlayersSymbolsDisplay();
+            gameInfo();
            //
             let sqareClicked = elem.target.classList[0].slice(-1); 
 
@@ -257,7 +271,7 @@ const displayGame = (function() {
                     player2.resetPlayerGamesWon(); 
                     player1.resetTurn();
                     player2.resetTurn(); 
-                    player1.incrementGamesPlayed();
+                    player1.incrementGamesPlayed(); 
                     player2.incrementGamesPlayed();
                     roundFinish = true;
                     console.log(player1.getPlayerName() + " has won the round number " + player1.getGamesPlayed());
@@ -343,26 +357,32 @@ const displayGame = (function() {
             if (roundFinish !== true) { 
                 if (player1.getPlayerTurn() > player2.getPlayerTurn()) {
                     console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`);
+                    roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`;
                 }
                 else if (player1.getPlayerTurn() < player2.getPlayerTurn()) {
                     console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
+                    roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`;
                 }
                 else if (player1.getPlayerTurn() === player2.getPlayerTurn()) {
                     if (player1.getPlayerSymbol() === "X") {
                         console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
+                        roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`;
                     }
                     else if (player2.getPlayerSymbol() === "X") {
                         console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`);
+                        roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`;
                     }
                     else {};  
                 }
                 else {};    
-            }
+            } 
             else {
                 console.log("Round end."); 
                 roundFinish = false;
                 getFirstPlayer();
             }; 
+
+            gameInfo();
 
             //
             if (player1.getPlayerGamesWon() === 3) {
@@ -370,21 +390,45 @@ const displayGame = (function() {
                 console.log(`${player1.getPlayerName()} has won the game!`);
                 player1.resetPlayerGamesWon();
                 player2.resetPlayerGamesWon(); 
+                gameInfo();
+                
             }
             else if (player2.getPlayerGamesWon() === 3) { 
                 alert(`${player2.getPlayerName()} has won the game!`); 
                 console.log(`${player2.getPlayerName()} has won the game!`);
                 player1.resetPlayerGamesWon();
                 player2.resetPlayerGamesWon(); 
+                gameInfo();
             } 
             else{};  
+            console.log(gameboard.getCopyGameboardMap());
         });  
     }; 
 
+    const resetGameButton = function() {
+        resetGame.addEventListener("click", () => {
+              location.reload(); 
+        });
+    };
+    
+    const gameStart = function() {
+        let gameStartKey = false;
+        startGameButton.addEventListener("click", () => { 
+            if (gameStartKey === false) {
+                gameStartKey = true;
+                displayGame.resetGameButton();
+                displayGame.changeName();
+                displayGame.gameInfo();  
+                displayGame.getFirstPlayer();  
+                displayGame.displayGameLogic();
+            }
+            else {}; 
+            console.log(gameStartKey);
+        })
+    };
+
     return{
-        displayGameLogic, getFirstPlayer, gameScore,
+        displayGameLogic, getFirstPlayer, gameInfo, resetGameButton, gameStart, changeName
     };   
 }) ();   
-displayGame.gameScore(); 
-displayGame.getFirstPlayer();  
-displayGame.displayGameLogic();
+displayGame.gameStart(); 
