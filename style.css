@@ -6,16 +6,48 @@
     padding: 0px;
     margin: 0px;
 }
+
+body {
+    background-color: #F6F7EB;  
+}
+
 .gameContainer {
     height: 100vh;
-    padding: 10px; 
+    padding: 10px;  
 }
 
 .gameInfoAndControl {
-    height: 15vh;  
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    height: 15vh; 
+    border: 1px solid black; 
+    margin-bottom: 5px;  
+}
 
+.gameInitiationContainer{ 
+    display: grid;
+    grid-template-columns: 5fr 2fr; 
+    height: 100%;     
+} 
+
+.gameName {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    font-size: clamp(1rem, 10vw, 7rem);  
+    background-color: #D9C7B8;  
+} 
+
+.startGameButton {
+    font-size: clamp(1rem, 5vw, 3rem); 
+    background-color: #F7F3EE;  
+
+}
+
+.gameControlAndInfo {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    font-size: clamp(1rem, 5vw, 2rem);    
+    background-color: #D9C7B8;  
+    height: 100%; 
 }
 
 .boardgameDisplay {
@@ -42,8 +74,8 @@
 } 
 
 .sqare:nth-child(even) {
-    background-color: blue;
+    background-color: #0047AB;  
 }
 .sqare:nth-child(odd) {
-    background-color: red; 
+    background-color: #800020;  
 }

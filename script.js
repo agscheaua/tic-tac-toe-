@@ -127,11 +127,15 @@ const displayGame = (function() {
 
     const gameInfoAndControl = document.querySelector(".gameInfoAndControl");
 
+    const gameInitiationContainer = document.querySelector(".gameInitiationContainer");
+    const gameName = document.querySelector(".gameName");
+    const startGameButton = document.querySelector(".startGameButton");
+
+    const gameControlAndInfo = document.querySelector(".gameControlAndInfo");
     const firstPlayer = document.querySelector(".firstPlayer");
     const secondPlayer = document.querySelector(".secondPlayer");
     const roundNumber = document.querySelector(".roundNumber");
     const roundInfo = document.querySelector(".roundInfo");
-    const startGameButton = document.querySelector(".startGameButton");
     const resetGame = document.querySelector(".resetGame");
     const changeNameButton = document.querySelector(".changeNameButton")
 
@@ -416,32 +420,23 @@ const displayGame = (function() {
     };
     
     const gameStart = function() {
-        let gameStartKey = false;
         startGameButton.addEventListener("click", () => { 
-            if (gameStartKey === false) {
-                gameStartKey = true;
+            
+                 
+                gameInitiationContainer.remove();  
                 displayGame.resetGameButton();
                 displayGame.changeName();
                 displayGame.gameInfo();  
                 displayGame.getFirstPlayer();  
                 displayGame.displayGameLogic();
-            }
-            else {}; 
-            console.log(gameStartKey);
+             
         })
     };
-
-    const hideSomething = function() {
-        const test_button = document.querySelector(".test-button");
-        test_button.addEventListener("click", () => {
-            firstPlayer.removeAttribute("hidden");  
-        });
-    };
-
+   
     return{
         displayGameLogic, getFirstPlayer, gameInfo, resetGameButton, gameStart, changeName, getPlayerSymbol,
-        hideSomething,
+        
     };   
 }) ();   
 displayGame.gameStart(); 
-displayGame.hideSomething(); 
+ 
