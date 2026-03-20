@@ -121,7 +121,7 @@ const player1 = player("Player-1");
 const player2 = player("Player-2");   
 
 // module made with IIFE that control the game display, and all its logic
-const displayGame = (function() { 
+const displayGame = function() { 
     
     //variable that need to be used in all the other methods of displayGame module (IIFE);
     let roundFinish;
@@ -187,9 +187,9 @@ const displayGame = (function() {
                 player2.changePlayerName(player2Name); 
             };
      
-            displayGame.getFirstPlayer();  
-            displayGame.getPlayerSymbol();
-            displayGame.gameInfo();
+            getFirstPlayer();  
+            getPlayerSymbol();
+            gameInfo();n
             console.log(player1.getPlayerName(), player2.getPlayerName()); 
         });   
     };
@@ -451,18 +451,17 @@ const displayGame = (function() {
         startGameButton.addEventListener("click", () => {  
                 gameInitiationContainer.remove();   
                 invokeVisibility(); 
-                displayGame.resetGameButton();
-                displayGame.changeName();
-                displayGame.gameInfo();  
-                displayGame.getFirstPlayer();  
-                displayGame.displayGameLogic();
+                resetGameButton();
+                changeName();
+                gameInfo();  
+                getFirstPlayer();  
+                displayGameLogic();  
         });
     };
    
     return{
-        displayGameLogic, getFirstPlayer, gameInfo, resetGameButton, gameStart, changeName, getPlayerSymbol,
-        
+        displayGameLogic, getFirstPlayer, gameInfo, resetGameButton, gameStart, changeName, getPlayerSymbol, 
     };   
-}) ();   
-displayGame.gameStart();  
- 
+};   
+displayGame(); 
+displayGame().gameStart();         
