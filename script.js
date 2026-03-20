@@ -455,7 +455,7 @@ const displayGame = function() {
                 changeName();
                 gameInfo();  
                 getFirstPlayer();  
-                displayGameLogic();  
+                displayGameLogic();   
         });
     };
    
@@ -463,5 +463,4 @@ const displayGame = function() {
         displayGameLogic, getFirstPlayer, gameInfo, resetGameButton, gameStart, changeName, getPlayerSymbol, 
     };   
 };   
-displayGame(); 
-displayGame().gameStart();         
+displayGame().gameStart();          
