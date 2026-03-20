@@ -439,7 +439,8 @@ const displayGame = function() {
 
     const resetGameButton = function() {
         resetGame.addEventListener("click", () => {
-            location.reload(); 
+            location.reload();
+            displayGame(); 
         });
     };
 
