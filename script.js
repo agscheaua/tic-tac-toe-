@@ -1,5 +1,6 @@
 
-//
+// module made with an IIFE, holds the gameboard array and functions
+// that interat with it;
 const gameboard = (function() {
     const gameboardMap = [  
         "", "", "",
@@ -31,7 +32,7 @@ const gameboard = (function() {
     };  
 }) ();  
 
-// 
+// factory function to create instances of player; 
 const player = function(name) { 
     let playerName = name;
     let playerTurn = 0; 
@@ -115,11 +116,11 @@ const player = function(name) {
     };
 };
 
-//
+// two instances of player;
 const player1 = player("Player-1");
 const player2 = player("Player-2");   
 
-// 
+// module made with IIFE that control the game display, and all its logic
 const displayGame = (function() { 
     
     //variable that need to be used in all the other methods of displayGame module (IIFE);
@@ -137,7 +138,7 @@ const displayGame = (function() {
     const roundNumber = document.querySelector(".roundNumber");
     const roundInfo = document.querySelector(".roundInfo");
     const resetGame = document.querySelector(".resetGame");
-    const changeNameButton = document.querySelector(".changeNameButton")
+    const changeNameButton = document.querySelector(".changeNameButton");
 
     const boardgameDisplay = document.querySelector(".boardgameDisplay");
     const sqaresContainerElement = document.createElement("div");
@@ -162,12 +163,35 @@ const displayGame = (function() {
     //change the name of the player any time you want;
     const changeName = function() {
         changeNameButton.addEventListener("click", () => {
-            player1.changePlayerName(prompt("Enter a new name for Player-1: "));
-            player2.changePlayerName(prompt("Enter a new name for Player-2: "));
+            let player1Name = prompt("Enter a new name of maximum 16 and minimum 1 characters for Player-1: ");
+            if (player1Name == null) {
+                player1Name = "Player-1"
+                player1.changePlayerName(player1Name);
+            } 
+            else{; 
+                for (;player1Name.length > 16 || player1Name.length < 1;) { 
+                    player1Name = prompt("Enter a new name of maximum 16 and minimum 1 characters for Player-1: ");
+                };
+                player1.changePlayerName(player1Name);
+            };
+
+            let player2Name = prompt("Enter a new name of maximum 16 and minimum 1 characters for Player-2: ");
+            if (player2Name == null) {
+                player2Name = "Player-2"
+                player2.changePlayerName(player2Name);
+            } 
+            else{; 
+                for (;player2Name.length > 16 || player2Name.length < 1;) { 
+                    player2Name = prompt("Enter a new name of maximum 16 and minimum 1 characters for Player-1: ");
+                };
+                player2.changePlayerName(player2Name); 
+            };
+     
             displayGame.getFirstPlayer();  
             displayGame.getPlayerSymbol();
             displayGame.gameInfo();
-        }); 
+            console.log(player1.getPlayerName(), player2.getPlayerName()); 
+        });   
     };
     
     //give players their symbols based on the rounds played;
@@ -183,19 +207,19 @@ const displayGame = (function() {
         else {};  
     };
     
-    //anonce the first player to input at the start of the game;
+    //annonce the first player to input at the start of the game;
     const getFirstPlayer = function() {
         givePlayersSymbolsDisplay();
         if (player1.getPlayerTurn() === player2.getPlayerTurn() && (player1.getPlayerTurn() === 0 && player2.getPlayerTurn() === 0)) {
             if (player1.getPlayerSymbol() === "X") { 
-                console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
-                roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`;
+                console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`);
+                roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`;
             }
             else if (player2.getPlayerSymbol() === "X") {
-                console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`);
-                roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`;
+                console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`);
+                roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`;
             } 
-            else {};    
+            else {};     
         } 
         else{}; 
     }; 
@@ -203,21 +227,21 @@ const displayGame = (function() {
     //announce the current player turn with its symbol;
     const getPlayerSymbol = function() {
         if (player1.getPlayerTurn() > player2.getPlayerTurn()) {
-            console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`);
-            roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`;
+            console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`);
+            roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`;
         }
         else if (player1.getPlayerTurn() < player2.getPlayerTurn()) {
-            console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
-            roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`;
+            console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`);
+            roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`;
         }
         else if (player1.getPlayerTurn() === player2.getPlayerTurn()) {
             if (player1.getPlayerSymbol() === "X") {
-                console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`);
-                roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol.`;
+                console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`);
+                roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`;
             }
             else if (player2.getPlayerSymbol() === "X") {
-                console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`);
-                roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol.`;
+                console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`);
+                roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`;
             }
             else {};  
         }
@@ -418,19 +442,21 @@ const displayGame = (function() {
             location.reload(); 
         });
     };
+
+    const invokeVisibility = function() { 
+        gameControlAndInfo.style.visibility = "visible";    
+    }; 
     
     const gameStart = function() {
-        startGameButton.addEventListener("click", () => { 
-            
-                 
-                gameInitiationContainer.remove();  
+        startGameButton.addEventListener("click", () => {  
+                gameInitiationContainer.remove();   
+                invokeVisibility(); 
                 displayGame.resetGameButton();
                 displayGame.changeName();
                 displayGame.gameInfo();  
                 displayGame.getFirstPlayer();  
                 displayGame.displayGameLogic();
-             
-        })
+        });
     };
    
     return{
@@ -438,5 +464,5 @@ const displayGame = (function() {
         
     };   
 }) ();   
-displayGame.gameStart(); 
+displayGame.gameStart();  
  
