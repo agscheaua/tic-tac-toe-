@@ -120,10 +120,10 @@ const player = function(name) {
 const player1 = player("Player-1");
 const player2 = player("Player-2");   
 
-// module made with IIFE that control the game display, and all its logic
+// factory function that control the game display, and all its logic;
 const displayGame = function() { 
     
-    //variable that need to be used in all the other methods of displayGame module (IIFE);
+    //variables that need to be used in all the other methods of displayGame ;
     let roundFinish;
 
     const gameInfoAndControl = document.querySelector(".gameInfoAndControl");
@@ -153,14 +153,14 @@ const displayGame = function() {
 
     const allSqareToSymbol = Array.from(document.querySelectorAll(".sqare"));
 
-    //clean all sqare of all the text;
+    //clean all squares of all text inside them;
     const cleanDispaySymbols = () => {
         for (let i = 0; i <= 8; i++) {
             allSqareToSymbol[i].textContent = "";
         };
     }; 
 
-    //change the name of the player any time you want;
+    //change the name of the players any time you want;
     const changeName = function() {
         changeNameButton.addEventListener("click", () => {
             let player1Name = prompt("Enter a new name of maximum 16 and minimum 1 characters for Player-1: ");
@@ -190,7 +190,6 @@ const displayGame = function() {
             getFirstPlayer();  
             getPlayerSymbol();
             gameInfo();n
-            console.log(player1.getPlayerName(), player2.getPlayerName()); 
         });   
     };
     
@@ -207,7 +206,8 @@ const displayGame = function() {
         else {};  
     };
     
-    //annonce the first player to input at the start of the game;
+    //announce the first player and its symbol that needs to input at the start
+    //of every game;
     const getFirstPlayer = function() {
         givePlayersSymbolsDisplay();
         if (player1.getPlayerTurn() === player2.getPlayerTurn() && (player1.getPlayerTurn() === 0 && player2.getPlayerTurn() === 0)) {
@@ -219,7 +219,7 @@ const displayGame = function() {
                 console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}'`);
                 roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}'`;
             } 
-            else {};     
+            else {};      
         } 
         else{}; 
     }; 
@@ -261,7 +261,7 @@ const displayGame = function() {
             givePlayersSymbolsDisplay();
             gameInfo();
             
-            // get the square clicked index inside the gameboardMap array;
+            //get the square clicked index inside the gameboardMap array;
             let sqareClicked = elem.target.classList[0].slice(-1); 
 
             //write the symbol in the square clicked;
@@ -448,10 +448,12 @@ const displayGame = function() {
             player2.resetTurn(); 
             player1.resetGamesPlayed();
             player2.resetGamesPlayed();
+            player1.changePlayerName("Player-1");
+            player2.changePlayerName("Player-2"); 
             gameboard.cleanGameBoardMap();
             cleanDispaySymbols()  
-            gameInfo();
             givePlayersSymbolsDisplay();
+            gameInfo();
             getFirstPlayer();     
         });
     };
@@ -469,11 +471,11 @@ const displayGame = function() {
                 gameInfo();  
                 getFirstPlayer();  
                 displayGameLogic();   
-        });
+        });  
     };
    
     return{
         displayGameLogic, getFirstPlayer, gameInfo, resetGameButton, gameStart, changeName, getPlayerSymbol, 
     };   
 };   
-displayGame().gameStart();            
+displayGame().gameStart();             
