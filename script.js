@@ -143,7 +143,7 @@ const displayGame = function() {
     const boardgameDisplay = document.querySelector(".boardgameDisplay");
     const sqaresContainerElement = document.createElement("div");
     sqaresContainerElement.classList.add("sqaresContainer");  
-    boardgameDisplay.appendChild(sqaresContainerElement); 
+    boardgameDisplay.appendChild(sqaresContainerElement);  
 
     for (let i = 0; i <= 8; i++) {
         const sqareSymbol = document.createElement("div");
@@ -212,12 +212,12 @@ const displayGame = function() {
         givePlayersSymbolsDisplay();
         if (player1.getPlayerTurn() === player2.getPlayerTurn() && (player1.getPlayerTurn() === 0 && player2.getPlayerTurn() === 0)) {
             if (player1.getPlayerSymbol() === "X") { 
-                console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`);
-                roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`;
+                console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}'`);
+                roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}'`;
             }
             else if (player2.getPlayerSymbol() === "X") {
-                console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`);
-                roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`;
+                console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}'`);
+                roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}'`;
             } 
             else {};     
         } 
@@ -227,21 +227,21 @@ const displayGame = function() {
     //announce the current player turn with its symbol;
     const getPlayerSymbol = function() {
         if (player1.getPlayerTurn() > player2.getPlayerTurn()) {
-            console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`);
-            roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`;
+            console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}'`);
+            roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}'`;
         }
         else if (player1.getPlayerTurn() < player2.getPlayerTurn()) {
-            console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`);
-            roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`;
+            console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}'`);
+            roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}'`;
         }
         else if (player1.getPlayerTurn() === player2.getPlayerTurn()) {
             if (player1.getPlayerSymbol() === "X") {
-                console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`);
-                roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}' symbol`;
+                console.log(`${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}'`);
+                roundInfo.textContent = `${player1.getPlayerName()} turn with '${player1.getPlayerSymbol()}'`;
             }
             else if (player2.getPlayerSymbol() === "X") {
-                console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`);
-                roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}' symbol`;
+                console.log(`${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}'`);
+                roundInfo.textContent = `${player2.getPlayerName()} turn with '${player2.getPlayerSymbol()}'`;
             }
             else {};  
         }
@@ -422,14 +422,17 @@ const displayGame = function() {
                 console.log(`${player1.getPlayerName()} has won the game!`);
                 player1.resetPlayerGamesWon();
                 player2.resetPlayerGamesWon(); 
-                gameInfo();
-                
+                player1.resetGamesPlayed();
+                player2.resetGamesPlayed();
+                gameInfo();    
             }
             else if (player2.getPlayerGamesWon() === 3) { 
                 alert(`${player2.getPlayerName()} has won the game!`); 
                 console.log(`${player2.getPlayerName()} has won the game!`);
                 player1.resetPlayerGamesWon();
-                player2.resetPlayerGamesWon(); 
+                player2.resetPlayerGamesWon();
+                player1.resetGamesPlayed();
+                player2.resetGamesPlayed();   
                 gameInfo();
             } 
             else{};  
@@ -439,8 +442,17 @@ const displayGame = function() {
 
     const resetGameButton = function() {
         resetGame.addEventListener("click", () => {
-            location.reload();
-            displayGame(); 
+            player1.resetPlayerGamesWon();
+            player2.resetPlayerGamesWon(); 
+            player1.resetTurn();
+            player2.resetTurn(); 
+            player1.resetGamesPlayed();
+            player2.resetGamesPlayed();
+            gameboard.cleanGameBoardMap();
+            cleanDispaySymbols()  
+            gameInfo();
+            givePlayersSymbolsDisplay();
+            getFirstPlayer();     
         });
     };
 
@@ -464,4 +476,4 @@ const displayGame = function() {
         displayGameLogic, getFirstPlayer, gameInfo, resetGameButton, gameStart, changeName, getPlayerSymbol, 
     };   
 };   
-displayGame().gameStart();          
+displayGame().gameStart();            
