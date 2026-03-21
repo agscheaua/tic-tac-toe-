@@ -64,6 +64,12 @@ body {
     height: 83vh; 
 }
 
+.roundNumber,
+.secondPlayer,
+.roundInfo {
+    border-left: 2px solid black;
+} 
+
 .sqaresContainer { 
     height: 100%;
     border: 1px solid black;
